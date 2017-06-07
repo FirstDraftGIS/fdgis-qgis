@@ -1,31 +1,10 @@
 # -*- coding: utf-8 -*-
-"""
-/***************************************************************************
- FirstDraftGIS
-                                 A QGIS plugin
- Automatically create first draft of your map
-                              -------------------
-        begin                : 2017-06-01
-        git sha              : $Format:%H$
-        copyright            : (C) 2017 by First Draft GIS
-        email                : daniel@firstdraftgis.com
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
-"""
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
 from PyQt4.QtGui import QAction, QIcon
 # Initialize Qt resources from file resources.py
 import resources
 # Import the code for the dialog
-from fdgis_dialog import FirstDraftGISDialog
+from fdgis_dialog import FileDialog, LinkDialog, TextDialog
 import os.path
 
 
@@ -40,6 +19,11 @@ class FirstDraftGIS:
             application at run time.
         :type iface: QgsInterface
         """
+        debug = True
+
+        self.dialogs = {"file": FileDialog(), "link": LinkDialog(), "text": TextDialog()}
+        if debug: print "self.dialogs:", self.dialogs
+
         # Save reference to the QGIS interface
         self.iface = iface
         # initialize plugin directory
@@ -133,7 +117,7 @@ class FirstDraftGIS:
         """
 
         # Create the dialog (after translation) and keep reference
-        self.dlg = FirstDraftGISDialog()
+        #self.dlg = FirstDraftGISDialog()
 
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
@@ -161,11 +145,22 @@ class FirstDraftGIS:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        icon_path = ':/plugins/FirstDraftGIS/icon.png'
         self.add_action(
-            icon_path,
-            text=self.tr(u'Add Data Source'),
-            callback=self.run,
+            icon_path=':/plugins/FirstDraftGIS/img/glyphicons-51-link.png',
+            text=self.tr(u'Add via Link'),
+            callback=lambda: self.run("link"),
+            parent=self.iface.mainWindow())
+
+        self.add_action(
+            icon_path=':/plugins/FirstDraftGIS/img/glyphicons-703-file-plus.png',
+            text=self.tr(u'Add File'),
+            callback=lambda: self.run("file"),
+            parent=self.iface.mainWindow())
+
+        self.add_action(
+            icon_path=':/plugins/FirstDraftGIS/img/glyphicons-709-paragraph.png',
+            text=self.tr(u'Add Text'),
+            callback=lambda: self.run("text"),
             parent=self.iface.mainWindow())
 
 
@@ -179,15 +174,9 @@ class FirstDraftGIS:
         # remove the toolbar
         del self.toolbar
 
-
-    def run(self):
-        """Run method that performs all the real work"""
-        # show the dialog
-        self.dlg.show()
-        # Run the dialog event loop
+    def open_dialog(self, name_of_dialog):
+        dialog = self.dialogs[name_of_dialog]
+        dialog.show()
         result = self.dlg.exec_()
-        # See if OK was pressed
         if result:
-            # Do something useful here - delete the line containing pass and
-            # substitute with your code.
-            pass
+            dialog.execute()
