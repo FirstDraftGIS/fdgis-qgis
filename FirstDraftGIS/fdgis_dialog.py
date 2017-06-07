@@ -2,7 +2,7 @@
 #import pip
 import os
 
-import api, json
+import fdgis, json
 from os import listdir, rmdir
 from os.path import dirname, join
 from PyQt4 import QtGui, uic
@@ -13,39 +13,43 @@ from tempfile import mkdtemp, NamedTemporaryFile
 
 #class FirstDraftGISDialog(QDialog, FORM_CLASS):
 class FirstDraftGISDialog(QDialog):
+    sources = []
     def __init__(self, parent=None):
-        """Constructor."""
-        super(FirstDraftGISDialog, self).__init__(parent)
-        # Set up the user interface from Designer.
-        # After setupUI you can access any designer object by doing
-        # self.<objectname>, and you can use autoconnect slots - see
-        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
-        # #widgets-and-dialogs-with-auto-connect
-        #self.setupUi(self)
-        self.ui = uic.loadUi(os.path.join(dirname(__file__), 'ui_files/' + name_of_ui + '.ui'))
+        try:
+            super(FirstDraftGISDialog, self).__init__(parent)
+            print "starting FirstDraftGISDialog"
+            debug = True
+            # Set up the user interface from Designer.
+            # After setupUI you can access any designer object by doing
+            # self.<objectname>, and you can use autoconnect slots - see
+            # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
+            # #widgets-and-dialogs-with-auto-connect
+            #self.setupUi(self)
+            self.ui = uic.loadUi(os.path.join(dirname(__file__), 'ui_files/' + self.name_of_ui + '.ui'))
+            if debug: print "self.ui:", self.ui
 
-        #self.spinner = QtWaitingSpinner(self)
+            #self.spinner = QtWaitingSpinner(self)
 
-        #self.add_data_button = QPushButton(self.tr('Add Data'))
-        #print "ops:", dir(self.add_data_button)
-        #self.ui.addDataButton.clicked.connect(self.execute)
+            #self.add_data_button = QPushButton(self.tr('Add Data'))
+            #print "ops:", dir(self.add_data_button)
+            #self.ui.addDataButton.clicked.connect(self.execute)
 
-        #self.sources = []
+            #self.sources = []
 
-        #pip.main(["install", "fdgis"])
+            #pip.main(["install", "fdgis"])
 
-        debug = True
-        if debug:
-            print "starting dialog init"
-            #print "addData:",
-            #print "self.add_data_button", self.add_data_button
+            if debug:
+                print "starting dialog init"
+                #print "addData:",
+                #print "self.add_data_button", self.add_data_button
+        except Exception as e:
+            print "[FirstDraftGISDialog.__init__ exception]: ", e
 
     def execute(self):
         try:
             print "starting start"
-            #self.ui.btn_start.clicked.connect(self.spinner_start)
-
-            zipped_shapefile = api.make_map(self.sources, debug=True, map_format="shapefile")
+            self.collect_sources()
+            zipped_shapefile = fdgis.make_map(self.sources, debug=True, map_format="shapefile")
             #print "geojson_map", geojson_map
             path_to_temp_dir = mkdtemp()
             print "path_to_temp_dir:", path_to_temp_dir
@@ -79,10 +83,10 @@ class LinkDialog(FirstDraftGISDialog):
     name_of_ui = "link"
     def collect_sources(self):
         print "[LinkDialog] starting collect_sources"
-        self.sources.append(self.link.text())
+        self.sources.append(self.ui.link.text())
 
 class TextDialog(FirstDraftGISDialog):
     name_of_ui = "text"
     def collect_sources(self):
         print "[TextDialog] starting collect_sources"
-        self.sources.append(self.text.text())
+        self.sources.append(self.ui.text.toPlainText())

@@ -42,7 +42,7 @@
     <string>Text</string>
    </property>
   </widget>
-  <widget class="QPlainTextEdit" name="plainTextEdit">
+  <widget class="QPlainTextEdit" name="text">
    <property name="geometry">
     <rect>
      <x>30</x>

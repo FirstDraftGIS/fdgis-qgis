@@ -31,5 +31,5 @@ def classFactory(iface):  # pylint: disable=invalid-name
     :type iface: QgsInterface
     """
     #
-    from .fdgis import FirstDraftGIS
+    from .firstdraftgis import FirstDraftGIS
     return FirstDraftGIS(iface)

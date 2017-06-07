@@ -38,15 +38,15 @@ LOCALES =
 # translation
 SOURCES = \
 	__init__.py \
-	fdgis.py fdgis_dialog.py
+	firstdraftgis.py fdgis_dialog.py
 
 PLUGINNAME = FirstDraftGIS
 
 PY_FILES = \
 	__init__.py \
-	fdgis.py fdgis_dialog.py
+	firstdraftgis.py fdgis_dialog.py
 
-UI_FILES = fdgis_dialog_base.ui
+UI_FILES = ui_files/file.ui ui_files/link.ui ui_files/text.ui
 
 EXTRAS = metadata.txt icon.png
 

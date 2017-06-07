@@ -116,10 +116,8 @@ class FirstDraftGIS:
         :rtype: QAction
         """
 
-        # Create the dialog (after translation) and keep reference
-        #self.dlg = FirstDraftGISDialog()
-
         icon = QIcon(icon_path)
+        print "created icon", icon, "with path", icon_path
         action = QAction(icon, text, parent)
         action.triggered.connect(callback)
         action.setEnabled(enabled_flag)
@@ -130,8 +128,9 @@ class FirstDraftGIS:
         if whats_this is not None:
             action.setWhatsThis(whats_this)
 
-        if add_to_toolbar:
-            self.toolbar.addAction(action)
+        #commenting out until have icon displayed properly
+        #if add_to_toolbar:
+        #    self.toolbar.addAction(action)
 
         if add_to_menu:
             self.iface.addPluginToMenu(
@@ -148,19 +147,21 @@ class FirstDraftGIS:
         self.add_action(
             icon_path=':/plugins/FirstDraftGIS/img/glyphicons-51-link.png',
             text=self.tr(u'Add via Link'),
-            callback=lambda: self.run("link"),
+            callback=lambda: self.open_dialog("link"),
             parent=self.iface.mainWindow())
 
+        """
         self.add_action(
             icon_path=':/plugins/FirstDraftGIS/img/glyphicons-703-file-plus.png',
             text=self.tr(u'Add File'),
-            callback=lambda: self.run("file"),
+            callback=lambda: self.open_dialog("file"),
             parent=self.iface.mainWindow())
+        """
 
         self.add_action(
             icon_path=':/plugins/FirstDraftGIS/img/glyphicons-709-paragraph.png',
             text=self.tr(u'Add Text'),
-            callback=lambda: self.run("text"),
+            callback=lambda: self.open_dialog("text"),
             parent=self.iface.mainWindow())
 
 
@@ -174,9 +175,11 @@ class FirstDraftGIS:
         # remove the toolbar
         del self.toolbar
 
-    def open_dialog(self, name_of_dialog):
+    def open_dialog(self, name_of_dialog, debug=True):
+        if debug: print "starting open_dialog with", name_of_dialog
         dialog = self.dialogs[name_of_dialog]
-        dialog.show()
-        result = self.dlg.exec_()
+        if debug: print "dialog", dialog
+        dialog.ui.show()
+        result = dialog.ui.exec_()
         if result:
             dialog.execute()
