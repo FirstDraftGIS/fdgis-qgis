@@ -177,9 +177,12 @@ class FirstDraftGIS:
 
     def open_dialog(self, name_of_dialog, debug=True):
         if debug: print "starting open_dialog with", name_of_dialog
+        self.dialogs[name_of_dialog].open()
+        """
         dialog = self.dialogs[name_of_dialog]
         if debug: print "dialog", dialog
         dialog.ui.show()
         result = dialog.ui.exec_()
         if result:
             dialog.execute()
+        """
