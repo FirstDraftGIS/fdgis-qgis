@@ -19,10 +19,15 @@ class FirstDraftGIS:
             application at run time.
         :type iface: QgsInterface
         """
-        debug = True
+        debug = False
 
-        self.dialogs = {"file": FileDialog(), "link": LinkDialog(), "text": TextDialog()}
-        if debug: print "self.dialogs:", self.dialogs
+        self.dialogs = {
+            "file": FileDialog(),
+            "link": LinkDialog(),
+            "text": TextDialog()
+        }
+        if debug:
+            print "self.dialogs:", self.dialogs
 
         # Save reference to the QGIS interface
         self.iface = iface
@@ -41,7 +46,6 @@ class FirstDraftGIS:
 
             if qVersion() > '4.3.3':
                 QCoreApplication.installTranslator(self.translator)
-
 
         # Declare instance attributes
         self.actions = []
@@ -65,7 +69,6 @@ class FirstDraftGIS:
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('FirstDraftGIS', message)
 
-
     def add_action(
         self,
         icon_path,
@@ -76,7 +79,8 @@ class FirstDraftGIS:
         add_to_toolbar=True,
         status_tip=None,
         whats_this=None,
-        parent=None):
+        parent=None
+    ):
         """Add a toolbar icon to the toolbar.
 
         :param icon_path: Path to the icon for this action. Can be a resource
@@ -128,8 +132,8 @@ class FirstDraftGIS:
         if whats_this is not None:
             action.setWhatsThis(whats_this)
 
-        #commenting out until have icon displayed properly
-        #if add_to_toolbar:
+        # commenting out until have icon displayed properly
+        # if add_to_toolbar:
         #    self.toolbar.addAction(action)
 
         if add_to_menu:
@@ -144,26 +148,27 @@ class FirstDraftGIS:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
+        path_to_img = ':/plugins/FirstDraftGIS/img/''
+
         self.add_action(
-            icon_path=':/plugins/FirstDraftGIS/img/glyphicons-51-link.png',
+            icon_path=path_to_img + 'glyphicons-51-link.png',
             text=self.tr(u'Add via Link'),
             callback=lambda: self.open_dialog("link"),
             parent=self.iface.mainWindow())
 
         """
         self.add_action(
-            icon_path=':/plugins/FirstDraftGIS/img/glyphicons-703-file-plus.png',
+            icon_path=path_to_img + 'glyphicons-703-file-plus.png',
             text=self.tr(u'Add File'),
             callback=lambda: self.open_dialog("file"),
             parent=self.iface.mainWindow())
         """
 
         self.add_action(
-            icon_path=':/plugins/FirstDraftGIS/img/glyphicons-709-paragraph.png',
+            icon_path=path_to_img + 'glyphicons-709-paragraph.png',
             text=self.tr(u'Add Text'),
             callback=lambda: self.open_dialog("text"),
             parent=self.iface.mainWindow())
-
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
@@ -176,13 +181,6 @@ class FirstDraftGIS:
         del self.toolbar
 
     def open_dialog(self, name_of_dialog, debug=True):
-        if debug: print "starting open_dialog with", name_of_dialog
+        if debug:
+            print "starting open_dialog with", name_of_dialog
         self.dialogs[name_of_dialog].open()
-        """
-        dialog = self.dialogs[name_of_dialog]
-        if debug: print "dialog", dialog
-        dialog.ui.show()
-        result = dialog.ui.exec_()
-        if result:
-            dialog.execute()
-        """

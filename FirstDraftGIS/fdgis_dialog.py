@@ -1,26 +1,34 @@
 # -*- coding: utf-8 -*-
-#import pip
-import os
+import fdgis
+from os import listdir
+from os import rmdir
+from os.path import dirname
+from os.path import join
+from PyQt4 import QtGui
+from PyQt4 import uic
+from PyQt4.QtGui import QDialog
+from PyQt4.QtGui import QDialogButtonBox
+from PyQt4.QtGui import QPushButton
+from qgis.core import QgsMapLayerRegistry
+from qgis.core import QgsVectorLayer
+from tempfile import mkdtemp
+from tempfile import NamedTemporaryFile
 
-import fdgis, json
-from os import listdir, rmdir
-from os.path import dirname, join
-from PyQt4 import QtGui, uic
-from PyQt4.QtGui import QDialog, QDialogButtonBox, QPushButton
-from qgis.core import QgsMapLayerRegistry, QgsVectorLayer
-from tempfile import mkdtemp, NamedTemporaryFile
-#from waitingspinnerwidget import QtWaitingSpinner
 
-#class FirstDraftGISDialog(QDialog, FORM_CLASS):
 class FirstDraftGISDialog(QDialog):
+
     sources = []
+
     def __init__(self, parent=None):
         try:
             super(FirstDraftGISDialog, self).__init__(parent)
-            self.ui = uic.loadUi(os.path.join(dirname(__file__), 'ui_files/' + self.name_of_ui + '.ui'))
+            relative_path = 'ui_files/' + self.name_of_ui + '.ui'
+            absolute_path = join(dirname(__file__), relative_path_to_ui_file)
+            self.ui = uic.loadUi(absolute_path)
 
             # execute if click OK button
-            self.ui.buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.execute)
+            self.okButton = self.ui.buttonBox.button(QDialogButtonBox.Ok)
+            self.okButton.clicked.connect(self.execute)
 
         except Exception as e:
             print "[FirstDraftGISDialog.__init__ exception]: ", e
@@ -29,14 +37,18 @@ class FirstDraftGISDialog(QDialog):
         try:
             print "starting start"
             self.collect_sources()
-            zipped_shapefile = fdgis.make_map(self.sources, debug=True, map_format="shapefile")
+            zipped_shapefile = fdgis.make_map(
+                self.sources,
+                debug=True,
+                map_format="shapefile")
             path_to_temp_dir = mkdtemp()
             print "path_to_temp_dir:", path_to_temp_dir
             zipped_shapefile.extractall(path_to_temp_dir)
             layers = []
             for filename in listdir(path_to_temp_dir):
                 if filename.endswith(".shp"):
-                    layer = QgsVectorLayer(join(path_to_temp_dir, filename), filename, "ogr")
+                    filepath = join(path_to_temp_dir, filename)
+                    layer = QgsVectorLayer(filepath, filename, "ogr")
                     layers.append(layer)
             QgsMapLayerRegistry.instance().addMapLayers(layers)
         except Exception as e:
@@ -44,17 +56,24 @@ class FirstDraftGISDialog(QDialog):
 
     def open(self):
         self.ui.show()
-        # don't use self.ui.exec_() method because testing is clearer with clicking
+        # don't use self.ui.exec_() method because
+        # testing is clearer with clicking
         # it's more clear to use clicked.connect(self.execute)
 
+
 class FileDialog(FirstDraftGISDialog):
+
     name_of_ui = "file"
+
     def collect_sources(self):
         print "[FileDialog] starting collect_sources"
-        #self.sources.append(self.text.text())
+        # self.sources.append(self.text.text())
+
 
 class LinkDialog(FirstDraftGISDialog):
+
     name_of_ui = "link"
+
     def collect_sources(self):
         try:
             print "[LinkDialog] starting collect_sources"
@@ -65,8 +84,11 @@ class LinkDialog(FirstDraftGISDialog):
             print "self.ui.link.text: ", self.ui.link.text
             raise e
 
+
 class TextDialog(FirstDraftGISDialog):
+
     name_of_ui = "text"
+
     def collect_sources(self):
         print "[TextDialog] starting collect_sources"
         self.sources.append(self.ui.text.toPlainText())

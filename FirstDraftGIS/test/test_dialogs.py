@@ -21,9 +21,12 @@ class FirstDraftGISDialogTest():
 
     def test_dialog_cancel(self):
         print "dialog", self.dialog
-        button = self.dialog.ui.buttonBox.button(QDialogButtonBox.Cancel).click()
+        buttonBox = self.dialog.ui.buttonBox
+        cancelButton = buttonBox.button(QDialogButtonBox.Cancel)
+        button = cancelButton.click()
         result = self.dialog.ui.result()
         self.assertEqual(result, QDialog.Rejected)
+
 
 class TestAddViaLink(unittest.TestCase, FirstDraftGISDialogTest):
 
@@ -32,10 +35,13 @@ class TestAddViaLink(unittest.TestCase, FirstDraftGISDialogTest):
 
     def test_dialog_ok(self):
         """Test we can click OK."""
-        self.dialog.ui.link.text = "https://raw.githubusercontent.com/FirstDraftGIS/fdgis-qgis/master/FirstDraftGIS/test/sources/australia.txt"
+        folder = "https://raw.githubusercontent.com/FirstDraftGIS/fdgis-qgis"
+        url = folder + "/master/FirstDraftGIS/test/sources/australia.txt"
+        self.dialog.ui.link.text = url
         self.dialog.ui.buttonBox.button(QDialogButtonBox.Ok).click()
         result = self.dialog.ui.result()
         self.assertEqual(result, QDialog.Accepted)
+
 
 class TestAddText(unittest.TestCase, FirstDraftGISDialogTest):
 
