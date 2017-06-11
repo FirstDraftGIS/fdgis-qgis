@@ -14,7 +14,7 @@ version=0.1
 author=First Draft GIS
 email=daniel@firstdraftgis.com
 
-about=First Draft GIS is an artificial intelligence that automatically creates maps based on input data that you give it. It takes in unstructured and semi-structured data like spreadsheets, news articles, and web pages.
+about=First Draft GIS is an artificial intelligence that automatically creates maps based on input data that you give it. It takes in unstructured and semi-structured data like spreadsheets, news articles, and web pages.  It makes use of the fdgis PyPi package, which will need to be pip installed along with its relevant dependencies, including requests and validators.
 
 tracker=https://github.com/FirstDraftGIS/fdgis-qgis/issues
 repository=https://github.com/FirstDraftGIS/fdgis-qgis
