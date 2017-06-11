@@ -1,7 +1,7 @@
-# This file contains metadata for your plugin. Since 
-# version 2.0 of QGIS this is the proper way to supply 
-# information about a plugin. The old method of 
-# embedding metadata in __init__.py will 
+# This file contains metadata for your plugin. Since
+# version 2.0 of QGIS this is the proper way to supply
+# information about a plugin. The old method of
+# embedding metadata in __init__.py will
 # is no longer supported since version 2.0.
 
 # This file should be included when you package your plugin.# Mandatory items:
@@ -16,7 +16,7 @@ email=daniel@firstdraftgis.com
 
 about=First Draft GIS is an artificial intelligence that automatically creates maps based on input data that you give it. It takes in unstructured and semi-structured data like spreadsheets, news articles, and web pages.
 
-tracker=https://github.com/FirstDraftGIS/fdgis-qgis
+tracker=https://github.com/FirstDraftGIS/fdgis-qgis/issues
 repository=https://github.com/FirstDraftGIS/fdgis-qgis
 # End of mandatory metadata
 
@@ -36,4 +36,3 @@ experimental=True
 
 # deprecated flag (applies to the whole plugin, not just a single version)
 deprecated=False
-
