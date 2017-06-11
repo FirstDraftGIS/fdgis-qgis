@@ -26,6 +26,9 @@ install fdgis-qgis plugin normally
 - Wait
 - The geocoded result will be added to your map
 
+# Test
+`make test`
+
 # Questions
 Feel free to email the Plugin's creator directly at daniel@firstdraftgis.com or post an issue here.
 
