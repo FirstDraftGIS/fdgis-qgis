@@ -23,7 +23,7 @@ class FirstDraftGISDialog(QDialog):
         try:
             super(FirstDraftGISDialog, self).__init__(parent)
             relative_path = 'ui_files/' + self.name_of_ui + '.ui'
-            absolute_path = join(dirname(__file__), relative_path_to_ui_file)
+            absolute_path = join(dirname(__file__), relative_path)
             self.ui = uic.loadUi(absolute_path)
 
             # execute if click OK button
@@ -39,8 +39,9 @@ class FirstDraftGISDialog(QDialog):
             self.collect_sources()
             zipped_shapefile = fdgis.make_map(
                 self.sources,
-                debug=True,
-                map_format="shapefile")
+                debug=False,
+                map_format="shapefile",
+                timeout=15)
             path_to_temp_dir = mkdtemp()
             print "path_to_temp_dir:", path_to_temp_dir
             zipped_shapefile.extractall(path_to_temp_dir)
@@ -51,8 +52,13 @@ class FirstDraftGISDialog(QDialog):
                     layer = QgsVectorLayer(filepath, filename, "ogr")
                     layers.append(layer)
             QgsMapLayerRegistry.instance().addMapLayers(layers)
+
+
         except Exception as e:
             print e
+
+        # clear so don't reuse sources for the next request
+        self.sources = []
 
     def open(self):
         self.ui.show()
@@ -77,11 +83,17 @@ class LinkDialog(FirstDraftGISDialog):
     def collect_sources(self):
         try:
             print "[LinkDialog] starting collect_sources"
-            self.sources.append(self.ui.link.text)
+            text = self.ui.link.text
+            # there's a really weird thing going on here
+            # when I run 'make test', text is a string
+            # when I use this extension in QGIS normally, text is a method
+            if str(type(text)) in ["<type 'builtin_function_or_method'>"]:
+                text = text()
+            self.sources.append(text)
             print "[LinkDialog] finished collect_sources"
         except Exception as e:
             print "[LinkDialog.error] " + str(e)
-            print "self.ui.link.text: ", self.ui.link.text
+            print "self.ui.link.text: ", self.ui.link.text()
             raise e
 
 

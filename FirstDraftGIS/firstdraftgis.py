@@ -148,7 +148,7 @@ class FirstDraftGIS:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        path_to_img = ':/plugins/FirstDraftGIS/img/''
+        path_to_img = ':/plugins/FirstDraftGIS/img/'
 
         self.add_action(
             icon_path=path_to_img + 'glyphicons-51-link.png',
